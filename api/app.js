@@ -8,7 +8,7 @@ var cors = require('cors');
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var authRoute = require('./routes/AuthRoute');
 
 var app = express();
 mongoose.connect(process.env.DB_URL, {
@@ -25,8 +25,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use("/", indexRouter);
+app.use('/signup', authRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
