@@ -21,7 +21,7 @@ mongoose.connect(process.env.DB_URL, {
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["https://for-finni-client.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
