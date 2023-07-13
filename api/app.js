@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 var cors = require('cors');
 require('dotenv').config();
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/IndexRoute');
 var authRoute = require('./routes/AuthRoute');
 var patientRoute = require('./routes/PatientRoute');
 
@@ -21,7 +21,7 @@ mongoose.connect(process.env.DB_URL, {
 
 app.use(
   cors({
-    origin: ["https://for-finni-client.onrender.com"],
+    origin: ["http://localhost:3000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -35,9 +35,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/", indexRouter);
 app.use('/account', authRoute);
 app.use('/patient', patientRoute);
-app.get("*", function (req, res) {
-  res.send("index_path");
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -38,7 +38,7 @@ const PatientSchema = new Schema(
 );
 
 PatientSchema.virtual("date_of_birth_formatted").get(function () {
-  return DateTime.fromJSDate(this.date_of_birth).toLocaleString(
+  return DateTime.fromJSDate(this.date_of_birth, {zone: "utc"}).toLocaleString(
     DateTime.DATE_MED
   );
 });

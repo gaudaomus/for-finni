@@ -10,7 +10,7 @@ const Login = () => {
     const verifyCookie = async () => {
       if (cookies.token) {
         const { data } = await axios.post(
-          "https://for-finni.onrender.com",
+          "http://localhost:4000",
           {},
           { withCredentials: true }
         );
@@ -42,13 +42,12 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "https://for-finni.onrender.com/account/login",
+        "http://localhost:4000/account/login",
         {
           ...inputValue,
         },
         { withCredentials: true }
       );
-      console.log(data);
       const { success, message } = data;
       if (success) {
         handleSuccess(message);
