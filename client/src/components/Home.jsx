@@ -13,7 +13,7 @@ const Home = () => {
         navigate("/account/login");
       }
       const { data } = await axios.post(
-        "http://localhost:4000",
+        "https://for-finni.onrender.com",
         {},
         { withCredentials: true }
       );
