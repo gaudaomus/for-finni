@@ -44,3 +44,32 @@ module.exports.PatientDetail = async (req, res, next) => {
     console.error(error);
   }
 };
+
+module.exports.PatientDetailUpdate = async (req, res, next) => {
+  try {
+    const patientDetail = await Patient.findByIdAndUpdate(req.params.id);
+    res.send(patientDetail);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+module.exports.PatientDetailDelete = async (req, res, next) => {
+  var { first_name, middle_name, last_name, date_of_birth, address, comments } =
+    req.body;
+  var patient = new Patient({
+    first_name,
+    middle_name,
+    last_name,
+    date_of_birth,
+    address,
+    comments,
+    _id: req.params.id,
+  });
+  try {
+    await Patient.findByIdAndDelete(req.params.id, patient);
+    res.redirect("/patient/list");
+  } catch (error) {
+    console.error(error);
+  }
+};
