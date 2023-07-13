@@ -20,7 +20,7 @@ const Home = () => {
       const { status, user } = data;
       setUsername(user);
       if (!status) {
-        return removeCookie("token"), navigate("/account/login");
+        return (removeCookie("token"), navigate("/account/login"));
       }
     };
     verifyCookie();
