@@ -1,9 +1,7 @@
 var express = require('express');
+const { userVerification } = require('../middlewares/AuthMiddleware');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.send('Sup');
-});
+router.post('/', userVerification);
 
 module.exports = router;
