@@ -39,7 +39,8 @@ module.exports.PatientList = async (req, res, next) => {
 module.exports.PatientDetail = async (req, res, next) => {
   try {
     const patientDetail = await Patient.findById(req.params.id);
-    res.send(patientDetail);
+    res.status(200)
+    .send(patientDetail);
   } catch (error) {
     console.error(error);
   }
@@ -47,8 +48,26 @@ module.exports.PatientDetail = async (req, res, next) => {
 
 module.exports.PatientDetailUpdate = async (req, res, next) => {
   try {
-    const patientDetail = await Patient.findByIdAndUpdate(req.params.id);
-    res.send(patientDetail);
+    const {
+      first_name,
+      middle_name,
+      last_name,
+      date_of_birth,
+      address,
+      comments,
+    } = req.body;
+    await Patient.findByIdAndUpdate(req.params.id, {
+      first_name,
+      middle_name,
+      last_name,
+      date_of_birth,
+      address,
+      comments,
+      _id: req.params.id,
+    });
+    res
+      .status(200)
+      .json({ message: "Patient updated successfully", success: true });
   } catch (error) {
     console.error(error);
   }
@@ -68,7 +87,9 @@ module.exports.PatientDetailDelete = async (req, res, next) => {
   });
   try {
     await Patient.findByIdAndDelete(req.params.id, patient);
-    res.redirect("/patient/list");
+    res
+      .status(200)
+      .json({ message: "Patient deleted successfully", success: true });
   } catch (error) {
     console.error(error);
   }
