@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import moment from "moment";
 
 const PatientDetails = () => {
   const navigate = useNavigate();
@@ -12,7 +13,6 @@ const PatientDetails = () => {
     middle_name,
     last_name,
     date_of_birth,
-    date_of_birth_formatted,
     addresses,
     comments,
   } = patientDetails;
@@ -71,7 +71,7 @@ const PatientDetails = () => {
       addressesCopy[parseInt(name)] = value;
       setPatientDetails({
         ...patientDetails,
-        "addresses": addressesCopy,
+        addresses: addressesCopy,
       });
     }
   };
@@ -83,7 +83,7 @@ const PatientDetails = () => {
       commentsCopy[parseInt(name)] = value;
       setPatientDetails({
         ...patientDetails,
-        "comments": commentsCopy,
+        comments: commentsCopy,
       });
     }
   };
@@ -92,7 +92,18 @@ const PatientDetails = () => {
     e.preventDefault();
     setPatientDetails({
       ...patientDetails,
-      "addresses": addresses.concat(""),
+      addresses: addresses.concat(""),
+    });
+  };
+
+  const deleteAddress = async (e) => {
+    e.preventDefault();
+    const { name } = e.target;
+    let addressesCopy = [...addresses];
+    addressesCopy.splice(parseInt(name), 1);
+    setPatientDetails({
+      ...patientDetails,
+      addresses: addressesCopy,
     });
   };
 
@@ -100,7 +111,18 @@ const PatientDetails = () => {
     e.preventDefault();
     setPatientDetails({
       ...patientDetails,
-      "comments": comments.concat(""),
+      comments: comments.concat(""),
+    });
+  };
+
+  const deleteComment = async (e) => {
+    e.preventDefault();
+    const { name } = e.target;
+    let commentsCopy = [...comments];
+    commentsCopy.splice(parseInt(name), 1);
+    setPatientDetails({
+      ...patientDetails,
+      comments: commentsCopy,
     });
   };
 
@@ -150,7 +172,13 @@ const PatientDetails = () => {
         />
       </div>
       <div>
-        {date_of_birth_formatted}
+        {new Date(new Date(
+          date_of_birth).getTime() + new Date().getTimezoneOffset() * 60 * 1000
+        ).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}
         <input
           name="date_of_birth"
           value={date_of_birth}
@@ -161,25 +189,36 @@ const PatientDetails = () => {
       <div>
         {addresses &&
           addresses.map((address, index) => (
-            <input
-              name={index}
-              value={address}
-              type="text"
-              onChange={handleOnChangeAddress}
-            />
+            <div>
+              <input
+                name={index}
+                value={address}
+                type="text"
+                onChange={handleOnChangeAddress}
+              />
+              <button name={index} onClick={deleteAddress}>
+                X
+              </button>
+            </div>
           ))}
         <button onClick={addAddress}>Add address</button>
       </div>
       <div>
         {comments &&
           comments.map((comment, index) => (
-            <input
-              name={index}
-              value={comment}
-              type="text"
-              onChange={handleOnChangeComment}
-            />
+            <div>
+              <input
+                name={index}
+                value={comment}
+                type="text"
+                onChange={handleOnChangeComment}
+              />
+              <button name={index} onClick={deleteComment}>
+                X
+              </button>
+            </div>
           ))}
+
         <button onClick={addComment}>Add comment</button>
       </div>
     </div>

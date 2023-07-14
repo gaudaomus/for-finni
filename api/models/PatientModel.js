@@ -37,10 +37,4 @@ const PatientSchema = new Schema(
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-PatientSchema.virtual("date_of_birth_formatted").get(function () {
-  return DateTime.fromJSDate(this.date_of_birth, {zone: "utc"}).toLocaleString(
-    DateTime.DATE_MED
-  );
-});
-
 module.exports = mongoose.model("Patient", PatientSchema);

@@ -39,8 +39,19 @@ const PatientList = () => {
                     {patient.first_name} {patient.last_name}
                   </td>
                 )}
-                <td>{patient.date_of_birth_formatted}</td>
-                <td><Link to={`/${patient._id}`}>Click for more info</Link></td>
+                <td>
+                  {new Date(patient.date_of_birth).toLocaleDateString(
+                    "en-US",
+                    {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }
+                  )}
+                </td>
+                <td>
+                  <Link to={`/${patient._id}`}>Click for more info</Link>
+                </td>
               </tr>
             ))}
         </tbody>
