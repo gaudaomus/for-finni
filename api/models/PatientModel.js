@@ -21,7 +21,7 @@ const PatientSchema = new Schema(
       type: Date,
       required: true,
     },
-    address: [
+    addresses: [
       {
         type: String,
         required: true,

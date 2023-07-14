@@ -9,10 +9,10 @@ const PatientCreate = () => {
     middle_name: "",
     last_name: "",
     date_of_birth: new Date().toLocaleString,
-    address: [],
+    addresses: [],
     comments: [],
   });
-  const { first_name, middle_name, last_name, date_of_birth, address, comments } = inputValue;
+  const { first_name, middle_name, last_name, date_of_birth, addresses, comments } = inputValue;
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setInputValue({
@@ -52,7 +52,7 @@ const PatientCreate = () => {
       middle_name: "",
       last_name: "",
       date_of_birth: new Date().toLocaleString,
-      address: [],
+      addresses: [],
       comments: [],
     });
   };
@@ -101,12 +101,12 @@ const PatientCreate = () => {
           />
         </div>
         <div>
-          <label htmlFor="address">Address</label>
+          <label htmlFor="addresses">Addresses</label>
           <input
             type="text"
-            name="address"
-            value={address}
-            placeholder="Enter address"
+            name="addresses"
+            value={addresses}
+            placeholder="Enter addresses"
             onChange={handleOnChange}
           />
         </div>

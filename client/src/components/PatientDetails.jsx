@@ -13,7 +13,7 @@ const PatientDetails = () => {
     last_name,
     date_of_birth,
     date_of_birth_formatted,
-    address,
+    addresses,
     comments,
   } = patientDetails;
 
@@ -64,6 +64,46 @@ const PatientDetails = () => {
     }
   };
 
+  const handleOnChangeAddress = (e) => {
+    if (isEdit) {
+      const { name, value } = e.target;
+      let addressesCopy = [...addresses];
+      addressesCopy[parseInt(name)] = value;
+      setPatientDetails({
+        ...patientDetails,
+        "addresses": addressesCopy,
+      });
+    }
+  };
+
+  const handleOnChangeComment = (e) => {
+    if (isEdit) {
+      const { name, value } = e.target;
+      let commentsCopy = [...comments];
+      commentsCopy[parseInt(name)] = value;
+      setPatientDetails({
+        ...patientDetails,
+        "comments": commentsCopy,
+      });
+    }
+  };
+
+  const addAddress = (e) => {
+    e.preventDefault();
+    setPatientDetails({
+      ...patientDetails,
+      "addresses": addresses.concat(""),
+    });
+  };
+
+  const addComment = (e) => {
+    e.preventDefault();
+    setPatientDetails({
+      ...patientDetails,
+      "comments": comments.concat(""),
+    });
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -110,7 +150,7 @@ const PatientDetails = () => {
         />
       </div>
       <div>
-        {patientDetails.date_of_birth_formatted}
+        {date_of_birth_formatted}
         <input
           name="date_of_birth"
           value={date_of_birth}
@@ -119,22 +159,28 @@ const PatientDetails = () => {
         />
       </div>
       <div>
-        {patientDetails.address && (
-          <ul>
-            {patientDetails.address.map((address) => (
-              <li>{address}</li>
-            ))}
-          </ul>
-        )}
+        {addresses &&
+          addresses.map((address, index) => (
+            <input
+              name={index}
+              value={address}
+              type="text"
+              onChange={handleOnChangeAddress}
+            />
+          ))}
+        <button onClick={addAddress}>Add address</button>
       </div>
       <div>
-        {patientDetails.comments && (
-          <ul>
-            {patientDetails.comments.map((comment) => (
-              <li>{comment}</li>
-            ))}
-          </ul>
-        )}
+        {comments &&
+          comments.map((comment, index) => (
+            <input
+              name={index}
+              value={comment}
+              type="text"
+              onChange={handleOnChangeComment}
+            />
+          ))}
+        <button onClick={addComment}>Add comment</button>
       </div>
     </div>
   );

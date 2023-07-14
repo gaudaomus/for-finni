@@ -8,7 +8,7 @@ module.exports.PatientCreate = async (req, res, next) => {
       middle_name,
       last_name,
       date_of_birth,
-      address,
+      addresses,
       comments,
     } = req.body;
     await Patient.create({
@@ -16,7 +16,7 @@ module.exports.PatientCreate = async (req, res, next) => {
       middle_name,
       last_name,
       date_of_birth,
-      address,
+      addresses,
       comments,
     });
     res
@@ -29,7 +29,7 @@ module.exports.PatientCreate = async (req, res, next) => {
 
 module.exports.PatientList = async (req, res, next) => {
   try {
-    const patientList = await Patient.find({}, "-address -comments");
+    const patientList = await Patient.find({}, "-addresses -comments");
     res.send(patientList);
   } catch (error) {
     console.error(error);
@@ -53,7 +53,7 @@ module.exports.PatientDetailUpdate = async (req, res, next) => {
       middle_name,
       last_name,
       date_of_birth,
-      address,
+      addresses,
       comments,
     } = req.body;
     await Patient.findByIdAndUpdate(req.params.id, {
@@ -61,7 +61,7 @@ module.exports.PatientDetailUpdate = async (req, res, next) => {
       middle_name,
       last_name,
       date_of_birth,
-      address,
+      addresses,
       comments,
       _id: req.params.id,
     });
@@ -74,14 +74,14 @@ module.exports.PatientDetailUpdate = async (req, res, next) => {
 };
 
 module.exports.PatientDetailDelete = async (req, res, next) => {
-  var { first_name, middle_name, last_name, date_of_birth, address, comments } =
+  var { first_name, middle_name, last_name, date_of_birth, addresses, comments } =
     req.body;
   var patient = new Patient({
     first_name,
     middle_name,
     last_name,
     date_of_birth,
-    address,
+    addresses,
     comments,
     _id: req.params.id,
   });
