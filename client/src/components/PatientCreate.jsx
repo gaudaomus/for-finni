@@ -45,11 +45,11 @@ const PatientCreate = () => {
       );
       const { status } = data;
       if (!status) {
-        return removeCookie("token"), navigate("/account/login");
+        return (removeCookie("token"), navigate("/account/login"));
       }
     };
     verifyCookie();
-  }, [cookies, removeCookie]);
+  }, [navigate, cookies, removeCookie]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

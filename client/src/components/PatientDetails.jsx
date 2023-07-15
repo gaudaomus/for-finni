@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
-import NavBar from "./NavBar";
 
 const PatientDetails = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
   const [patientDetails, setPatientDetails] = useState([]);
   const [cookies, removeCookie] = useCookies([]);
   const [isEdit, setIsEdit] = useState(false);
@@ -33,8 +31,7 @@ const PatientDetails = () => {
         {},
         { withCredentials: true }
       );
-      const { status, user } = data;
-      setUsername(user);
+      const { status } = data;
       if (!status) {
         return removeCookie("token"), navigate("/account/login");
       } else {
@@ -180,16 +177,12 @@ const PatientDetails = () => {
   };
 
   return (
-    <div className="grid justify-items-center">
-      <NavBar username={username} />
-      <button
-        onClick={function () {
-          navigate("/patient");
-        }}
-      >
-        Home
-      </button>
-      <button onClick={handleDelete}>Delete</button>
+    <div>
+      <div className="px-4 sm:px-0">
+        <h3 className="text-base font-semibold leading-7 text-gray-900">
+          Patient Information
+        </h3>
+      </div>
       <button
         onClick={function (e) {
           if (isEdit) {
@@ -209,8 +202,10 @@ const PatientDetails = () => {
           Cancel
         </button>
       )}
+      <button onClick={handleDelete}>Delete</button>
       <div>
         <input
+          className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
           name="first_name"
           value={first_name}
           type="text"

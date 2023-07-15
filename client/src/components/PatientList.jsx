@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
-import NavBar from "./NavBar";
 
 const PatientList = () => {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies([]);
-  const [username, setUsername] = useState("");
   const [patients, setPatients] = useState([]);
   useEffect(() => {
     const verifyCookie = async () => {
@@ -19,10 +17,9 @@ const PatientList = () => {
         {},
         { withCredentials: true }
       );
-      const { status, user } = data;
-      setUsername(user);
+      const { status } = data;
       if (!status) {
-        return removeCookie("token"), navigate("/account/login");
+        return (removeCookie("token"), navigate("/account/login"));
       } else {
         getPatients();
       }
@@ -39,19 +36,19 @@ const PatientList = () => {
       console.log(patients);
     };
     verifyCookie();
-  }, []);
+  }, [cookies, removeCookie, navigate]);
+
   return (
-    <div className="grid justify-items-center">
-      <NavBar username={username} />
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-10/12 max-w-screen-xl">
-        <div class="pb-4 bg-white">
+    <div className="grid justify-items-center w-screen">
+      <div className="relative overflow-x-auto shadow-md rounded-lg w-9/12">
+        <div className="pb-4 bg-white flex justify-around">
           <label for="table-search" class="sr-only">
             Search
           </label>
-          <div class="relative mt-1">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <div className="relative w-8/12">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <svg
-                class="w-4 h-4 text-gray-500"
+                className="w-4 h-4 text-gray-500"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -69,20 +66,20 @@ const PatientList = () => {
             <input
               type="text"
               id="table-search"
-              class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+              className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Search for items"
             />
           </div>
           <button
-            className="pb-4 bg-white"
+            className="px-2 text-sm text-white bg-blue-600 hover:bg-blue-700 hover:border-gray-300 border rounded-lg"
             onClick={function () {
               navigate("/patient/create");
             }}
           >
-            Create new patient
+            Add patient
           </button>
         </div>
-        <table className="w-full text-sm text-left text-gray-500">
+        <table className="text-sm text-left text-gray-500 w-full">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
               <th scope="col" className="px-6 py-3">
@@ -104,12 +101,12 @@ const PatientList = () => {
                   key={patient._id}
                 >
                   {patient.middle_name ? (
-                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    <td className="px-6 py-4 font-medium text-gray-900">
                       {patient.first_name} {patient.middle_name}{" "}
                       {patient.last_name}
                     </td>
                   ) : (
-                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    <td className="px-6 py-4 font-medium text-gray-900">
                       {patient.first_name} {patient.last_name}
                     </td>
                   )}

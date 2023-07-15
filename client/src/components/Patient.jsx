@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import NavBar from "./NavBar";
@@ -21,20 +21,16 @@ const Patient = () => {
       const { status, user } = data;
       setUsername(user);
       if (!status) {
-        return removeCookie("token"), navigate("/account/login");
+        return (removeCookie("token"), navigate("/account/login"));
       }
     };
     verifyCookie();
   }, [cookies, navigate, removeCookie]);
-  const Logout = () => {
-    removeCookie("token", { path: "/" });
-    navigate("/account/signup");
-  };
 
   return (
     <div className="grid justify-items-center">
       <NavBar username={username} />
-      
+      <Outlet />
     </div>
   );
 };
