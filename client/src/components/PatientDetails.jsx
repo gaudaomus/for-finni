@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import axios from "axios";
-import moment from "moment";
+import NavBar from "./NavBar";
 
 const PatientDetails = () => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
   const [patientDetails, setPatientDetails] = useState([]);
+  const [cookies, removeCookie] = useCookies([]);
   const [isEdit, setIsEdit] = useState(false);
   const { id } = useParams();
   const {
@@ -21,6 +24,24 @@ const PatientDetails = () => {
   const handleSuccess = (msg) => console.log(msg);
 
   useEffect(() => {
+    const verifyCookie = async () => {
+      if (!cookies.token) {
+        navigate("/account/login");
+      }
+      const { data } = await axios.post(
+        "http://localhost:4000",
+        {},
+        { withCredentials: true }
+      );
+      const { status, user } = data;
+      setUsername(user);
+      if (!status) {
+        return removeCookie("token"), navigate("/account/login");
+      } else {
+        getPatientDetails();
+      }
+    };
+
     const getPatientDetails = async () => {
       const { data } = await axios.get(
         `http://localhost:4000/patient/${id}`,
@@ -28,10 +49,11 @@ const PatientDetails = () => {
         { withCredentials: true }
       );
       console.log(data);
-      data ? setPatientDetails(data) : navigate("/");
+      data ? setPatientDetails(data) : navigate("/patient");
     };
-    getPatientDetails();
-  }, [id, navigate]);
+
+    verifyCookie();
+  }, [id, navigate, cookies, removeCookie]);
 
   const handleDelete = async (e) => {
     try {
@@ -44,7 +66,7 @@ const PatientDetails = () => {
       if (success) {
         handleSuccess(message);
         setTimeout(() => {
-          navigate("/");
+          navigate("/patient");
         }, 1000);
       } else {
         handleError(message);
@@ -88,51 +110,56 @@ const PatientDetails = () => {
     }
   };
 
-  const addAddress = (e) => {
-    e.preventDefault();
-    setPatientDetails({
-      ...patientDetails,
-      addresses: addresses.concat(""),
-    });
+  const addAddress = () => {
+    if (isEdit) {
+      setPatientDetails({
+        ...patientDetails,
+        addresses: addresses.concat(""),
+      });
+    }
   };
 
   const deleteAddress = async (e) => {
-    e.preventDefault();
-    const { name } = e.target;
-    let addressesCopy = [...addresses];
-    addressesCopy.splice(parseInt(name), 1);
-    setPatientDetails({
-      ...patientDetails,
-      addresses: addressesCopy,
-    });
+    if (isEdit) {
+      const { name } = e.target;
+      let addressesCopy = [...addresses];
+      addressesCopy.splice(parseInt(name), 1);
+      setPatientDetails({
+        ...patientDetails,
+        addresses: addressesCopy,
+      });
+    }
   };
 
-  const addComment = (e) => {
-    e.preventDefault();
-    setPatientDetails({
-      ...patientDetails,
-      comments: comments.concat(""),
-    });
+  const addComment = () => {
+    if (isEdit) {
+      setPatientDetails({
+        ...patientDetails,
+        comments: comments.concat(""),
+      });
+    }
   };
 
   const deleteComment = async (e) => {
-    e.preventDefault();
-    const { name } = e.target;
-    let commentsCopy = [...comments];
-    commentsCopy.splice(parseInt(name), 1);
-    setPatientDetails({
-      ...patientDetails,
-      comments: commentsCopy,
-    });
+    if (isEdit) {
+      const { name } = e.target;
+      let commentsCopy = [...comments];
+      commentsCopy.splice(parseInt(name), 1);
+      setPatientDetails({
+        ...patientDetails,
+        comments: commentsCopy,
+      });
+    }
   };
 
   const handleUpdate = async (e) => {
-    e.preventDefault();
     try {
       const { data } = await axios.post(
         `http://localhost:4000/patient/${id}/update`,
         {
           ...patientDetails,
+          addresses: addresses.filter((address) => address.length > 0),
+          comments: comments.filter((comment) => comment.length > 0),
         },
         { withCredentials: true }
       );
@@ -147,11 +174,21 @@ const PatientDetails = () => {
     }
     setPatientDetails({
       ...patientDetails,
+      addresses: addresses.filter((address) => address.length > 0),
+      comments: comments.filter((comment) => comment.length > 0),
     });
   };
 
   return (
-    <div>
+    <div className="grid justify-items-center">
+      <NavBar username={username} />
+      <button
+        onClick={function () {
+          navigate("/patient");
+        }}
+      >
+        Home
+      </button>
       <button onClick={handleDelete}>Delete</button>
       <button
         onClick={function (e) {
@@ -163,6 +200,15 @@ const PatientDetails = () => {
       >
         {isEdit ? "Save" : "Edit"}
       </button>
+      {isEdit && (
+        <button
+          onClick={function () {
+            window.location.reload(false);
+          }}
+        >
+          Cancel
+        </button>
+      )}
       <div>
         <input
           name="first_name"
@@ -172,8 +218,25 @@ const PatientDetails = () => {
         />
       </div>
       <div>
-        {new Date(new Date(
-          date_of_birth).getTime() + new Date().getTimezoneOffset() * 60 * 1000
+        <input
+          name="middle_name"
+          value={middle_name}
+          type="text"
+          onChange={handleOnChange}
+        />
+      </div>
+      <div>
+        <input
+          name="last_name"
+          value={last_name}
+          type="text"
+          onChange={handleOnChange}
+        />
+      </div>
+      <div>
+        {new Date(
+          new Date(date_of_birth).getTime() +
+            new Date().getTimezoneOffset() * 60 * 1000
         ).toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",

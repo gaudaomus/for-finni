@@ -16,7 +16,7 @@ const Signup = () => {
         );
         const { status } = data;
         if (status) {
-          return navigate("/");
+          return navigate("/patient");
         }
       }
     };
@@ -55,7 +55,7 @@ const Signup = () => {
         if (success) {
           handleSuccess(message);
           setTimeout(() => {
-            navigate("/");
+            navigate("/patient");
           }, 1000);
         } else {
           handleError(message);

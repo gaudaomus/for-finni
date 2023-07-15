@@ -16,7 +16,7 @@ const Login = () => {
         );
         const { status } = data;
         if (status) {
-          return navigate("/");
+          return navigate("/patient");
         }
       }
     };
@@ -52,7 +52,7 @@ const Login = () => {
       if (success) {
         handleSuccess(message);
         setTimeout(() => {
-          navigate("/");
+          navigate("/patient");
         }, 1000);
       } else {
         handleError(message);

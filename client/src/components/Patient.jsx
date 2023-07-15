@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
-import PatientList from "./PatientList";
+import NavBar from "./NavBar";
 
 const Patient = () => {
   const navigate = useNavigate();
@@ -32,16 +32,10 @@ const Patient = () => {
   };
 
   return (
-    <>
-      <div className="home_page">
-        <h4>
-          {" "}
-          Welcome <span>{username}</span>
-        </h4>
-        <button onClick={Logout}>LOGOUT</button>
-        < PatientList />
-      </div>
-    </>
+    <div className="grid justify-items-center">
+      <NavBar username={username} />
+      
+    </div>
   );
 };
 
