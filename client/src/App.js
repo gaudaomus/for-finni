@@ -1,4 +1,3 @@
-import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Patient from "./components/Patient";
 import Signup from "./components/Signup";
@@ -9,9 +8,9 @@ import PatientCreate from "./components/PatientCreate";
 
 function App() {
   return (
-    <div className="App">
+    <div className="flex justify-center h-full">
       <Routes>
-        <Route path="/" element={<Navigate to="/patient" />} />
+        <Route path="/" element={<Navigate to="/patient/list" />} />
         <Route path="/patient" element={<Patient />}>
           <Route path="list" element={<PatientList />} />
           <Route path="create" element={<PatientCreate />} />

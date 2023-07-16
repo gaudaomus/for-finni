@@ -5,7 +5,7 @@ const NavBar = ({username}) => {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies([]);
   const Logout = () => {
-    removeCookie("token", { path: "*" });
+    removeCookie("token", {path: "/"});
     navigate("/account/signup");
   };
 
@@ -21,7 +21,7 @@ const NavBar = ({username}) => {
               <li>
                 <Link
                   className="block py-2 pl-3 pr-4 hover:text-white hover:bg-blue-700 hover:rounded bg-transparent text-blue-700"
-                  to="/patient"
+                  to="/patient/list"
                 >
                   Home
                 </Link>

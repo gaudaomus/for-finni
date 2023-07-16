@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { DateTime } = require("luxon");
+const { AddressSchema } = require("./AddressModel")
 
 const Schema = mongoose.Schema;
 
@@ -23,18 +23,18 @@ const PatientSchema = new Schema(
     },
     addresses: [
       {
-        type: String,
+        type: AddressSchema,
         required: true,
       },
     ],
     comments: [
       {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "Comment",
         required: false,
       },
     ],
   },
-  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 module.exports = mongoose.model("Patient", PatientSchema);

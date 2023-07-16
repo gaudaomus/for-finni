@@ -41,7 +41,7 @@ const PatientList = () => {
   return (
     <div className="grid justify-items-center w-screen">
       <div className="relative overflow-x-auto shadow-md rounded-lg w-9/12">
-        <div className="pb-4 bg-white flex justify-around">
+        <div className="py-4 bg-white flex justify-around mt-2">
           <label for="table-search" class="sr-only">
             Search
           </label>
@@ -111,14 +111,14 @@ const PatientList = () => {
                     </td>
                   )}
                   <td className="px-6 py-4">
-                    {new Date(patient.date_of_birth).toLocaleDateString(
-                      "en-US",
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }
-                    )}
+                    {new Date(
+                      new Date(patient.date_of_birth).getTime() +
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    ).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </td>
                   <td>
                     <Link
