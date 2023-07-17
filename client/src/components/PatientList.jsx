@@ -7,6 +7,7 @@ const PatientList = () => {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies([]);
   const [patients, setPatients] = useState([]);
+  const [filteredPatients, setFilteredPatients] = useState([]);
   useEffect(() => {
     const verifyCookie = async () => {
       if (!cookies.token) {
@@ -19,7 +20,7 @@ const PatientList = () => {
       );
       const { status } = data;
       if (!status) {
-        return (removeCookie("token"), navigate("/account/login"));
+        return removeCookie("token"), navigate("/account/login");
       } else {
         getPatients();
       }
@@ -32,9 +33,34 @@ const PatientList = () => {
         { withCredentials: true }
       );
       setPatients(data);
+      setFilteredPatients(data);
     };
     verifyCookie();
   }, [cookies, removeCookie, navigate]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setFilteredPatients(
+      patients.filter(
+        (patient) =>
+          patient.first_name
+            .toUpperCase()
+            .includes(
+              document.getElementById("table-search").value.toUpperCase()
+            ) ||
+          patient.middle_name
+            .toUpperCase()
+            .includes(
+              document.getElementById("table-search").value.toUpperCase()
+            ) ||
+          patient.last_name
+            .toUpperCase()
+            .includes(
+              document.getElementById("table-search").value.toUpperCase()
+            )
+      )
+    );
+  };
 
   return (
     <div className="grid justify-items-center w-screen">
@@ -66,6 +92,7 @@ const PatientList = () => {
               id="table-search"
               className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Search for items"
+              onChange={handleSearch}
             />
           </div>
           <button
@@ -92,22 +119,17 @@ const PatientList = () => {
             </tr>
           </thead>
           <tbody>
-            {patients &&
-              patients.map((patient) => (
+            {filteredPatients &&
+              filteredPatients.map((patient) => (
                 <tr
                   className="bg-white border-b hover:bg-gray-50"
                   key={patient._id}
                 >
-                  {patient.middle_name ? (
-                    <td className="px-6 py-4 font-medium text-gray-900">
-                      {patient.first_name} {patient.middle_name}{" "}
-                      {patient.last_name}
-                    </td>
-                  ) : (
-                    <td className="px-6 py-4 font-medium text-gray-900">
-                      {patient.first_name} {patient.last_name}
-                    </td>
-                  )}
+                  <td className="px-6 py-4 font-medium text-gray-900">
+                    {patient.first_name}{" "}
+                    {patient.middle_name ? patient.middle_name + " " : " "}
+                    {patient.last_name}
+                  </td>
                   <td className="px-6 py-4">
                     {new Date(
                       new Date(patient.date_of_birth).getTime() +
