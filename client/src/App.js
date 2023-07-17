@@ -8,12 +8,13 @@ import PatientCreate from "./components/PatientCreate";
 
 function App() {
   return (
-    <div className="flex justify-center h-full">
+    <div className="flex h-full justify-center">
       <Routes>
         <Route path="/" element={<Navigate to="/patient/list" />} />
         <Route path="/patient" element={<Patient />}>
           <Route path="list" element={<PatientList />} />
-          <Route path="create" element={<PatientCreate />} />
+          <Route path="create" element={<PatientCreate isUpdate={false} />} />
+          <Route path=":id/update" element={<PatientCreate isUpdate={true} />} />
           <Route path=":id" element={<PatientDetails />} />
         </Route>
         <Route path="/account/signup" element={<Signup />} />

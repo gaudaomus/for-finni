@@ -10,7 +10,7 @@ const Login = () => {
     const verifyCookie = async () => {
       if (cookies.token) {
         const { data } = await axios.post(
-          "http://localhost:4000",
+          "http://localhost:4000/",
           {},
           { withCredentials: true }
         );
@@ -116,7 +116,7 @@ const Login = () => {
             type="submit"
             className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Submit
+            Login
           </button>
           <span className="mt-10 text-center text-sm text-gray-500">
             Need an account?{" "}

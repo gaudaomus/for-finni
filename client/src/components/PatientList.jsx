@@ -13,7 +13,7 @@ const PatientList = () => {
         navigate("/account/login");
       }
       const { data } = await axios.post(
-        "http://localhost:4000",
+        "http://localhost:4000/",
         {},
         { withCredentials: true }
       );
@@ -32,17 +32,15 @@ const PatientList = () => {
         { withCredentials: true }
       );
       setPatients(data);
-      console.log(data);
-      console.log(patients);
     };
     verifyCookie();
   }, [cookies, removeCookie, navigate]);
 
   return (
     <div className="grid justify-items-center w-screen">
-      <div className="relative overflow-x-auto shadow-md rounded-lg w-9/12">
+      <div className="relative overflow-x-auto shadow-md rounded-lg w-6/12">
         <div className="py-4 bg-white flex justify-around mt-2">
-          <label for="table-search" class="sr-only">
+          <label htmlFor="table-search" className="sr-only">
             Search
           </label>
           <div className="relative w-8/12">
@@ -56,9 +54,9 @@ const PatientList = () => {
               >
                 <path
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                 />
               </svg>

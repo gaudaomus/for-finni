@@ -51,3 +51,18 @@ module.exports.Login = async (req, res, next) => {
     console.error(error);
   }
 };
+
+module.exports.Logout = async (req, res, next) => {
+  try {
+    res.cookie("token", "none", {
+      withCredentials: true,
+      httpOnly: false,
+      expires: new Date(Date.now()),
+    });
+    return res
+      .status(200)
+      .json({ message: "User logged out successfully", success: true });
+  } catch (error) {
+    console.error(error);
+  }
+};

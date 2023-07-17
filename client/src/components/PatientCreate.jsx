@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { v4 } from "uuid";
 
-const PatientCreate = () => {
+const PatientCreate = ({ isUpdate }) => {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies([]);
   const [inputValue, setInputValue] = useState({
@@ -15,7 +15,7 @@ const PatientCreate = () => {
     addresses: [{ id: v4(), street: "", city: "", state: "", zip_code: "" }],
     comments: [],
   });
-
+  const { id } = useParams();
   const {
     first_name,
     middle_name,
@@ -31,17 +31,30 @@ const PatientCreate = () => {
         navigate("/account/login");
       }
       const { data } = await axios.post(
-        "http://localhost:4000",
+        "http://localhost:4000/",
         {},
         { withCredentials: true }
       );
       const { status } = data;
       if (!status) {
-        return removeCookie("token"), navigate("/account/login");
+        return (removeCookie("token"), navigate("/account/login"));
+      } else if (isUpdate) {
+        getPatientDetails();
       }
     };
+
+    const getPatientDetails = async () => {
+      const { data } = await axios.get(
+        `http://localhost:4000/patient/${id}`,
+        {},
+        { withCredentials: true }
+      );
+      console.log(data);
+      data ? setInputValue(data) : navigate("/patient/list");
+    };
+
     verifyCookie();
-  }, [navigate, cookies, removeCookie]);
+  }, [navigate, cookies, removeCookie, id, isUpdate]);
 
   const handleError = (err) => console.log(err);
   const handleSuccess = (msg) => console.log(msg);
@@ -81,7 +94,6 @@ const PatientCreate = () => {
   const deleteAddress = async (e) => {
     e.preventDefault();
     const { id } = e.target;
-    console.log(e);
     setInputValue({
       ...inputValue,
       addresses: addresses.filter((address) => address.id !== id),
@@ -89,9 +101,9 @@ const PatientCreate = () => {
   };
 
   const handleOnChangeComment = (e) => {
-    const { name, value } = e.target;
+    const { id, value } = e.target;
     let commentsCopy = [...comments];
-    commentsCopy.find((comment) => comment.id === name).comment = value;
+    commentsCopy.find((comment) => comment.id === id).comment = value;
     setInputValue({
       ...inputValue,
       comments: commentsCopy,
@@ -115,9 +127,54 @@ const PatientCreate = () => {
     });
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.delete(
+        `http://localhost:4000/patient/${id}/delete`,
+        {},
+        { withCredentials: true }
+      );
+      const { success, message } = data;
+      if (success) {
+        handleSuccess(message);
+        setTimeout(() => {
+          navigate("/patient/list");
+        }, 1000);
+      } else {
+        handleError(message);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post(
+        `http://localhost:4000/patient/${id}/update`,
+        {
+          ...inputValue,
+        },
+        { withCredentials: true }
+      );
+      const { success, message } = data;
+      if (success) {
+        handleSuccess(message);
+        setTimeout(() => {
+          navigate(`/patient/${id}`);
+        }, 1000);
+      } else {
+        handleError(message);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(inputValue.addresses[0])
     try {
       const { data } = await axios.post(
         "http://localhost:4000/patient/create",
@@ -138,19 +195,13 @@ const PatientCreate = () => {
     } catch (err) {
       console.log(err);
     }
-    setInputValue({
-      ...inputValue,
-      first_name: "",
-      middle_name: "",
-      last_name: "",
-      date_of_birth: new Date().toLocaleString,
-      addresses: [],
-      comments: [],
-    });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="sm:w-full sm:max-w-4xl">
+    <form
+      onSubmit={isUpdate ? handleUpdate : handleSubmit}
+      className="sm:w-full sm:max-w-4xl"
+    >
       <div className="space-y-6">
         <h2 className="text-base font-semibold leading-7 text-gray-900">
           Create a new patient profile
@@ -238,7 +289,6 @@ const PatientCreate = () => {
                 type="date"
                 name="date_of_birth"
                 value={date_of_birth}
-                required
                 onChange={handleOnChange}
                 className="[grid-area:stack] py-0 z-50 opacity-0 relative right-2"
               />
@@ -253,93 +303,101 @@ const PatientCreate = () => {
           >
             Addresses
           </label>
+          <div className="divide-y divide-gray-300">
+            {addresses.map((address, index) => (
+              <div className="flex py-3">
+                <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-9">
+                  <div className="sm:col-span-4">
+                    <label
+                      htmlFor="street"
+                      className="text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Street
+                    </label>
+                    <input
+                      id={address.id}
+                      name="street"
+                      value={address.street}
+                      type="text"
+                      onChange={handleOnChangeAddress}
+                      className="w-full rounded-md border-0 py-1.5 mb-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
 
-          {addresses.map((address, index) => (
-            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-7">
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="street"
-                  className="text-sm font-medium leading-6 text-gray-900"
-                >
-                  Street
-                </label>
-                <input
-                  id={address.id}
-                  name="street"
-                  value={address.street}
-                  type="text"
-                  onChange={handleOnChangeAddress}
-                  className="w-full rounded-md border-0 py-1.5 mb-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
+                  <div className="sm:col-span-3">
+                    <label
+                      htmlFor="city"
+                      className="text-sm font-medium leading-6 text-gray-900"
+                    >
+                      City
+                    </label>
+                    <input
+                      id={address.id}
+                      name="city"
+                      value={address.city}
+                      type="text"
+                      onChange={handleOnChangeAddress}
+                      className="w-full rounded-md border-0 py-1.5 mb-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                  <div className="sm:col-span-1">
+                    <label
+                      htmlFor="state"
+                      className="text-sm font-medium leading-6 text-gray-900"
+                    >
+                      State
+                    </label>
+                    <input
+                      id={address.id}
+                      name="state"
+                      value={address.state}
+                      type="text"
+                      onChange={handleOnChangeAddress}
+                      className="block w-full rounded-md border-0 py-1.5 mb-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                  <div className="sm:col-span-1">
+                    <label
+                      htmlFor="zip_code"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Zip Code
+                    </label>
+                    <input
+                      id={address.id}
+                      name="zip_code"
+                      value={address.zip_code}
+                      type="text"
+                      onChange={handleOnChangeAddress}
+                      className="block w-full rounded-md border-0 py-1.5 mb-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <button
+                    id={address.id}
+                    onClick={deleteAddress}
+                    className="pt-4 sm:col-span-1 mt-3.5 ml-3"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-6 h-6 pointer-events-none"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
-
-              <div className="sm:col-span-2">
-                <label
-                  htmlFor="city"
-                  className="text-sm font-medium leading-6 text-gray-900"
-                >
-                  City
-                </label>
-                <input
-                  id={address.id}
-                  name="city"
-                  value={address.city}
-                  type="text"
-                  onChange={handleOnChangeAddress}
-                  className="w-full rounded-md border-0 py-1.5 mb-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-              <div className="sm:col-span-1">
-                <label
-                  htmlFor="state"
-                  className="text-sm font-medium leading-6 text-gray-900"
-                >
-                  State
-                </label>
-                <input
-                  id={address.id}
-                  name="state"
-                  value={address.state}
-                  type="text"
-                  onChange={handleOnChangeAddress}
-                  className="block w-full rounded-md border-0 py-1.5 mb-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-              <div className="sm:col-span-1">
-                <label
-                  htmlFor="zip_code"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Zip Code
-                </label>
-                <input
-                id={address.id}
-                  name="zip_code"
-                  value={address.zip_code}
-                  type="text"
-                  onChange={handleOnChangeAddress}
-                  className="block w-full rounded-md border-0 py-1.5 mb-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-
-              <button id={address.id} onClick={deleteAddress} className="pt-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 pointer-events-none"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                  />
-                </svg>
-              </button>
-            </div>
-          ))}
+            ))}
+          </div>
           <div className="flex justify-end pt-1.5">
             <button
               className="flex-inline justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -357,10 +415,11 @@ const PatientCreate = () => {
         >
           Comments
         </label>
-        {comments.map((comment, index) => (
+        {comments.map((comment) => (
           <div className="flex">
             <input
-              name={comment.id}
+              id={comment.id}
+              name="comment"
               value={comment.comment}
               type="text"
               onChange={handleOnChangeComment}
@@ -388,6 +447,7 @@ const PatientCreate = () => {
             </button>
           </div>
         ))}
+
         <div className="flex justify-end py-1.5">
           <button
             onClick={addComment}
@@ -397,12 +457,30 @@ const PatientCreate = () => {
           </button>
         </div>
       </div>
-      <button
-        type="submit"
-        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-      >
-        Submit
-      </button>
+      <div className="flex justify-around mt-8">
+        <button
+          type="submit"
+          className="flex w-3/12 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          {isUpdate ? "Update" : "Create"}
+        </button>
+        <Link
+          to={isUpdate ? `/patient/${id}` : "/patient/list"}
+          className="flex w-3/12 justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+        >
+          Cancel
+        </Link>
+      </div>
+      {isUpdate && (
+        <div className="flex justify-end">
+          <button
+            className="rounded-md w-3/12 bg-red-600 px-3 py-1.5 mt-10 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+            onClick={handleDelete}
+          >
+            Delete profile
+          </button>
+        </div>
+      )}
     </form>
   );
 };

@@ -14,7 +14,7 @@ const Patient = () => {
         navigate("/account/login");
       }
       const { data } = await axios.post(
-        "http://localhost:4000",
+        "http://localhost:4000/",
         {},
         { withCredentials: true }
       );
@@ -28,7 +28,7 @@ const Patient = () => {
   }, [cookies, navigate, removeCookie]);
 
   return (
-    <div className="grid justify-items-center">
+    <div>
       <NavBar username={username} />
       <Outlet />
     </div>

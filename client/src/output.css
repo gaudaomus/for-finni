@@ -840,6 +840,11 @@ select {
   margin-right: 0.75rem;
 }
 
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .mt-0 {
   margin-top: 0px;
 }
@@ -912,6 +917,42 @@ select {
   margin-right: 1.5rem;
 }
 
+.ml-4 {
+  margin-left: 1rem;
+}
+
+.mt-3 {
+  margin-top: 0.75rem;
+}
+
+.mt-3\.5 {
+  margin-top: 0.875rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-0 {
+  margin-bottom: 0px;
+}
+
+.ml-10 {
+  margin-left: 2.5rem;
+}
+
 .block {
   display: block;
 }
@@ -980,8 +1021,44 @@ select {
   width: 1.5rem;
 }
 
+.w-10\/12 {
+  width: 83.333333%;
+}
+
+.w-6\/12 {
+  width: 50%;
+}
+
+.w-\[80vw\] {
+  width: 80vw;
+}
+
+.w-\[60vw\] {
+  width: 60vw;
+}
+
+.w-\[50vw\] {
+  width: 50vw;
+}
+
+.w-3\/12 {
+  width: 25%;
+}
+
+.w-4\/12 {
+  width: 33.333333%;
+}
+
+.w-1\/12 {
+  width: 8.333333%;
+}
+
 .max-w-sm {
   max-width: 24rem;
+}
+
+.max-w-2xl {
+  max-width: 42rem;
 }
 
 .flex-1 {
@@ -990,6 +1067,14 @@ select {
 
 .resize-none {
   resize: none;
+}
+
+.list-decimal {
+  list-style-type: decimal;
+}
+
+.list-disc {
+  list-style-type: disc;
 }
 
 .grid-cols-1 {
@@ -1069,6 +1154,33 @@ select {
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
 
+.divide-y > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+}
+
+.divide-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(4px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(4px * var(--tw-divide-y-reverse));
+}
+
+.divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-opacity: 1;
+  border-color: rgb(243 244 246 / var(--tw-divide-opacity));
+}
+
+.divide-red-700 > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-opacity: 1;
+  border-color: rgb(185 28 28 / var(--tw-divide-opacity));
+}
+
+.divide-gray-300 > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-divide-opacity));
+}
+
 .overflow-x-auto {
   overflow-x: auto;
 }
@@ -1097,6 +1209,10 @@ select {
   border-bottom-width: 1px;
 }
 
+.border-t {
+  border-top-width: 1px;
+}
+
 .border-gray-200 {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity));
@@ -1105,6 +1221,11 @@ select {
 .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
+
+.border-gray-100 {
+  --tw-border-opacity: 1;
+  border-color: rgb(243 244 246 / var(--tw-border-opacity));
 }
 
 .bg-black {
@@ -1265,6 +1386,18 @@ select {
   padding-top: 1rem;
 }
 
+.pl-20 {
+  padding-left: 5rem;
+}
+
+.pl-2 {
+  padding-left: 0.5rem;
+}
+
+.pl-\[30\] {
+  padding-left: 30;
+}
+
 .text-left {
   text-align: left;
 }
@@ -1319,6 +1452,10 @@ select {
 
 .leading-9 {
   line-height: 2.25rem;
+}
+
+.leading-8 {
+  line-height: 2rem;
 }
 
 .tracking-tight {
@@ -1588,9 +1725,25 @@ select {
     grid-column: span 3 / span 3;
   }
 
+  .sm\:col-span-5 {
+    grid-column: span 5 / span 5;
+  }
+
+  .sm\:col-span-4 {
+    grid-column: span 4 / span 4;
+  }
+
   .sm\:mx-auto {
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .sm\:mt-0 {
+    margin-top: 0px;
+  }
+
+  .sm\:grid {
+    display: grid;
   }
 
   .sm\:w-full {
@@ -1613,6 +1766,38 @@ select {
     grid-template-columns: repeat(7, minmax(0, 1fr));
   }
 
+  .sm\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .sm\:grid-cols-8 {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .sm\:grid-cols-12 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .sm\:grid-cols-\[16\] {
+    grid-template-columns: 16;
+  }
+
+  .sm\:grid-cols-\[15\] {
+    grid-template-columns: 15;
+  }
+
+  .sm\:grid-cols-10 {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+
+  .sm\:grid-cols-9 {
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+  }
+
+  .sm\:gap-4 {
+    gap: 1rem;
+  }
+
   .sm\:px-0 {
     padding-left: 0px;
     padding-right: 0px;
@@ -1628,7 +1813,21 @@ select {
   }
 }
 
+@media (min-width: 768px) {
+  .md\:w-10\/12 {
+    width: 83.333333%;
+  }
+
+  .md\:w-8\/12 {
+    width: 66.666667%;
+  }
+}
+
 @media (min-width: 1024px) {
+  .lg\:w-6\/12 {
+    width: 50%;
+  }
+
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;

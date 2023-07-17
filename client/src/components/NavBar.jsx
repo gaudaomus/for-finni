@@ -1,17 +1,33 @@
 import { useNavigate, Link } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import axios from "axios";
 
-const NavBar = ({username}) => {
+const NavBar = ({ username }) => {
   const navigate = useNavigate();
-  const [cookies, removeCookie] = useCookies([]);
-  const Logout = () => {
-    removeCookie("token", {path: "/"});
-    navigate("/account/signup");
+  const handleError = (err) => console.log(err);
+  const handleSuccess = (msg) => console.log(msg);
+  const Logout = async () => {
+    try {
+      console.log(document.cookie)
+      document.cookie =
+        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      const { data } = await axios.get("http://localhost:4000/account/logout");
+      const { success, message } = data;
+      if (success) {
+        handleSuccess(message);
+        setTimeout(() => {
+          navigate("/account/login");
+        }, 1000);
+      } else {
+        handleError(message);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     username && (
-      <nav className="bg-white border-gray-200">
+      <nav className="flex bg-white border-gray-200">
         <div className="flex flex-wrap items-center justify-between mx-auto p-4">
           <div
             className="items-center justify-between w-full flex"
