@@ -8,6 +8,7 @@ const Patient = () => {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies([]);
   const [username, setUsername] = useState("");
+  
   useEffect(() => {
     const verifyCookie = async () => {
       if (!cookies.token) {

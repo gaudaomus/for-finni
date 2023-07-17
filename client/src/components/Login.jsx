@@ -6,6 +6,12 @@ import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies([]);
+  const [inputValue, setInputValue] = useState({
+    email: "",
+    password: "",
+  });
+  const { email, password } = inputValue;
+
   useEffect(() => {
     const verifyCookie = async () => {
       if (cookies.token) {
@@ -22,11 +28,10 @@ const Login = () => {
     };
     verifyCookie();
   }, [cookies, navigate, removeCookie]);
-  const [inputValue, setInputValue] = useState({
-    email: "",
-    password: "",
-  });
-  const { email, password } = inputValue;
+
+  const handleError = (err) => console.log(err);
+  const handleSuccess = (msg) => console.log(msg);
+
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setInputValue({
@@ -34,9 +39,6 @@ const Login = () => {
       [name]: value,
     });
   };
-
-  const handleError = (err) => console.log(err);
-  const handleSuccess = (msg) => console.log(msg);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

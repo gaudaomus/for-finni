@@ -5,6 +5,7 @@ const NavBar = ({ username }) => {
   const navigate = useNavigate();
   const handleError = (err) => console.log(err);
   const handleSuccess = (msg) => console.log(msg);
+  
   const Logout = async () => {
     try {
       console.log(document.cookie)

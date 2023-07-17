@@ -7,6 +7,7 @@ import { v4 } from "uuid";
 const PatientCreate = ({ isUpdate }) => {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies([]);
+  const { id } = useParams();
   const [inputValue, setInputValue] = useState({
     first_name: "",
     middle_name: "",
@@ -15,7 +16,6 @@ const PatientCreate = ({ isUpdate }) => {
     addresses: [{ id: v4(), street: "", city: "", state: "", zip_code: "" }],
     comments: [],
   });
-  const { id } = useParams();
   const {
     first_name,
     middle_name,
@@ -37,7 +37,7 @@ const PatientCreate = ({ isUpdate }) => {
       );
       const { status } = data;
       if (!status) {
-        return (removeCookie("token"), navigate("/account/login"));
+        return removeCookie("token"), navigate("/account/login");
       } else if (isUpdate) {
         getPatientDetails();
       }
@@ -173,7 +173,7 @@ const PatientCreate = ({ isUpdate }) => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
@@ -199,7 +199,7 @@ const PatientCreate = ({ isUpdate }) => {
 
   return (
     <form
-      onSubmit={isUpdate ? handleUpdate : handleSubmit}
+      onSubmit={isUpdate ? handleUpdate : handleCreate}
       className="sm:w-full sm:max-w-4xl"
     >
       <div className="space-y-6">

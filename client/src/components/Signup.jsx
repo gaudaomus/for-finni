@@ -6,6 +6,14 @@ import axios from "axios";
 const Signup = () => {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies([]);
+  const [inputValue, setInputValue] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    username: "",
+  });
+  const { email, password, confirmPassword, username } = inputValue;
+
   useEffect(() => {
     const verifyCookie = async () => {
       if (cookies.token) {
@@ -22,13 +30,10 @@ const Signup = () => {
     };
     verifyCookie();
   }, [cookies, navigate, removeCookie]);
-  const [inputValue, setInputValue] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    username: "",
-  });
-  const { email, password, confirmPassword, username } = inputValue;
+
+  const handleError = (err) => console.log(err);
+  const handleSuccess = (msg) => console.log(msg);
+
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setInputValue({
@@ -36,9 +41,6 @@ const Signup = () => {
       [name]: value,
     });
   };
-
-  const handleError = (err) => console.log(err);
-  const handleSuccess = (msg) => console.log(msg);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -170,7 +172,7 @@ const Signup = () => {
             </button>
           </div>
           <span className="mt-10 text-center text-sm text-gray-500">
-            Already have an account? {" "}
+            Already have an account?{" "}
             <Link
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
               to={"/account/login"}

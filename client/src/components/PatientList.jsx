@@ -126,8 +126,8 @@ const PatientList = () => {
                   key={patient._id}
                 >
                   <td className="px-6 py-4 font-medium text-gray-900">
-                    {patient.first_name}{" "}
-                    {patient.middle_name ? patient.middle_name + " " : " "}
+                    {patient.first_name}
+                    {patient.middle_name ? ` ${patient.middle_name}` : " "}{" "}
                     {patient.last_name}
                   </td>
                   <td className="px-6 py-4">
